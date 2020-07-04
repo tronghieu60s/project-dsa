@@ -1,4 +1,5 @@
-﻿using System;
+﻿using project_dsa.helps;
+using System;
 
 namespace project_dsa
 {
@@ -6,7 +7,8 @@ namespace project_dsa
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Menu menu = new Menu();
+            menu.MainMenu();
         }
     }
 }

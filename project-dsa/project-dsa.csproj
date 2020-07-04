@@ -6,4 +6,8 @@
     <RootNamespace>project_dsa</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="methods\" />
+  </ItemGroup>
+
 </Project>
