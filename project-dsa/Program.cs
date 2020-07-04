@@ -1,5 +1,8 @@
-﻿using project_dsa.helps;
+﻿using project_dsa.components;
+using project_dsa.helps;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace project_dsa
 {
@@ -7,8 +10,12 @@ namespace project_dsa
     {
         static void Main(string[] args)
         {
-            Menu menu = new Menu();
-            menu.MainMenu();
+            Admin admin = new Admin();
+            LinkedList<Admin> ListAdmin = admin.Initialization();
+            bool adminLogin = admin.Login(ListAdmin);
+            Console.WriteLine(adminLogin);
+            if (adminLogin)
+                admin.Menu();
         }
     }
 }

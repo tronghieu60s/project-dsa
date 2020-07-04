@@ -6,55 +6,23 @@ namespace project_dsa.helps
 {
     class Menu
     {
-        public void MainMenu()
+        public int MainMenu()
         {
-            string user, pass;
+            int select;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("*********************************");
             Console.Write("*");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDANG NHAP ADMIN\t");
+            Console.Write("\tMO PHONG ATM\t");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\t*");
             Console.WriteLine("*********************************");
-            // user
+            // select
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("User:\t");
+            Console.Write("Ban chon:\t");
             Console.ResetColor();
-            user = Console.ReadLine();
-            // pass
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Pass:\t");
-            Console.ResetColor();
-            pass = HidePass();
-        }
-
-        public string HidePass()
-        {
-            string pass = "";
-            do
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                // Backspace Should Not Work
-                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                {
-                    pass += key.KeyChar;
-                    Console.Write("*");
-                }
-                else
-                {
-                    if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                    {
-                        pass = pass.Substring(0, (pass.Length - 1));
-                        Console.Write("\b \b");
-                    }
-                    else if (key.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-            } while (true);
-            return pass;
+            int.TryParse(Console.ReadLine(), out select);
+            return select;
         }
     }
 }
