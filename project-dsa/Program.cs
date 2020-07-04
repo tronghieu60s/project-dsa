@@ -10,12 +10,17 @@ namespace project_dsa
     {
         static void Main(string[] args)
         {
-            Admin admin = new Admin();
-            LinkedList<Admin> ListAdmin = admin.Initialization();
-            bool adminLogin = admin.Login(ListAdmin);
-            Console.WriteLine(adminLogin);
-            if (adminLogin)
-                admin.Menu();
+            //Admin admin = new Admin();
+            //LinkedList<Admin> ListAdmin = admin.Initialization();
+            //bool adminLogin = admin.Login(ListAdmin);
+            //if (adminLogin)
+            //    admin.Menu();
+
+            User user = new User();
+            LinkedList<User> ListUser = user.Initialization();
+            bool userLogin = user.Login(ListUser);
+            if (userLogin)
+                user.Menu();
         }
     }
 }
