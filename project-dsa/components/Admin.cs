@@ -83,7 +83,7 @@ namespace project_dsa.components
             return status;
         }
 
-        public void Menu()
+        public int Menu()
         {
             int select;
             Console.Clear();
@@ -109,6 +109,7 @@ namespace project_dsa.components
             Console.Write("Ban chon:\t");
             Console.ResetColor();
             int.TryParse(Console.ReadLine(), out select);
+            return select;
         }
 
         private string HidePass()

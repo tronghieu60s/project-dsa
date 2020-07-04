@@ -10,17 +10,26 @@ namespace project_dsa
     {
         static void Main(string[] args)
         {
-            //Admin admin = new Admin();
-            //LinkedList<Admin> ListAdmin = admin.Initialization();
-            //bool adminLogin = admin.Login(ListAdmin);
-            //if (adminLogin)
-            //    admin.Menu();
-
+            Admin admin = new Admin();
             User user = new User();
-            LinkedList<User> ListUser = user.Initialization();
-            bool userLogin = user.Login(ListUser);
-            if (userLogin)
-                user.Menu();
+
+            LinkedList<Admin> ListAdmin = admin.Initialization();
+            LinkedList<TheTu> ListTheTu = user.Initialization();
+            bool adminLogin = admin.Login(ListAdmin);
+            if (adminLogin)
+                switch (admin.Menu())
+                {
+                    case 2:
+                        user.CreateAccount(ListTheTu);
+                        break;
+                    default:
+                        break;
+                }
+
+            //LinkedList<TheTu> ListTheTu = user.Initialization();
+            //bool userLogin = user.Login(ListTheTu);
+            //if (userLogin)
+            //    user.Menu();
         }
     }
 }

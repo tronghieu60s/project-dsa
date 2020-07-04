@@ -14,7 +14,14 @@ namespace project_dsa.components
         public int Amount { get => _amount; set => _amount = value; }
         public DateTime Time { get => _time; set => _time = value; }
 
-        public GiaoDich(int id, int pin, string type, int amount, DateTime time): base(id, pin)
+        public GiaoDich()
+        {
+            _type = "";
+            _amount = 0;
+            _time = new DateTime();
+        }
+
+        public GiaoDich(int id, int pin, string type, int amount, DateTime time, bool locked): base(id, pin, locked)
         {
             _type = type;
             _amount = amount;
