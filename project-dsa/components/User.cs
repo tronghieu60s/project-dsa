@@ -136,6 +136,23 @@ namespace project_dsa.components
             else Console.WriteLine("Ban khong du tien.");
         }
 
+        public void RenderTransaction(User user)
+        {
+            Console.Write($"\tGiao Dich");
+            Console.Write($"\tSo Tien");
+            Console.Write($"\t\tThoi Gian");
+            Console.WriteLine($"\t\t\tTu");
+            GiaoDich _gd = new GiaoDich();
+            LinkedList<GiaoDich> ListGiaoDich = _gd.GetTransaction($"{user.Id}");
+            for (LinkedListNode<GiaoDich> p = ListGiaoDich.First; p != null; p = p.Next)
+            {
+                Console.Write($"\t{p.Value.Type}");
+                Console.Write($"\t{p.Value.Amount}");
+                Console.Write($"\t\t{p.Value.Time}");
+                Console.WriteLine($"\t\t{p.Value.IdTf}");
+            }
+        }
+
         public void CreateUser(long id)
         {
             Console.Write("Nhap ten khach hang: ");

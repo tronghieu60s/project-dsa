@@ -48,6 +48,12 @@ namespace project_dsa
                     case 3:
                         user.Transfers(userLogin);
                         break;
+                    case 4:
+                        user.RenderTransaction(userLogin);
+                        break;
+                    case 5:
+                        user.ChangePin(ListTheTu, userLogin);
+                        break;
                     default:
                         break;
                 }

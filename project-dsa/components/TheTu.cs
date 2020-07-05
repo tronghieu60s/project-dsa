@@ -219,5 +219,35 @@ namespace project_dsa.components
             _sp.Await(status, "Mo khoa Thanh Cong!", "Mo khoa That Bai!");
             SaveFile(ListTheTu);
         }
+
+        public void ChangePin(LinkedList<TheTu> ListTheTu, User user)
+        {
+            Support _sp = new Support();
+
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+            {
+                if (p.Value.Id == user.Id)
+                {
+                    Console.Write("Nhap ma pin cu: ");
+                    int oldPin; int.TryParse(_sp.HidePass(), out oldPin);
+                    Console.Write("Nhap ma pin moi: ");
+                    int newPin; int.TryParse(_sp.HidePass(), out newPin);
+                    Console.Write("Nhap lai ma pin moi: ");
+                    int reNewPin; int.TryParse(_sp.HidePass(), out reNewPin);
+                    if (oldPin == p.Value.Pin)
+                    {
+                        if (newPin == reNewPin)
+                        {
+                            p.Value.Pin = newPin;
+                            SaveFile(ListTheTu);
+                            Console.WriteLine("Doi ma pin thanh cong.");
+                        }
+                        else Console.WriteLine("Nhap ma pin khong khop.");
+                    }
+                    else Console.WriteLine("Nhap sai ma pin.");
+                    break;
+                }
+            }
+        }
     }
 }

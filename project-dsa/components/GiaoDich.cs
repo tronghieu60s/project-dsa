@@ -70,5 +70,27 @@ namespace project_dsa.components
                     sw.WriteLine($"{p.Value.Id}#{p.Value.Type}#{p.Value.Amount}#{p.Value.Time}#{p.Value.IdTf}");
             }
         }
+
+        public LinkedList<GiaoDich> GetTransaction(string id)
+        {
+            string path = $"D:/LichSu{id}.txt";
+            LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();
+            using (StreamReader rd = new StreamReader(path))
+            {
+                int spt = Convert.ToInt32(rd.ReadLine());
+                for (int i = 0; i < spt; i++)
+                {
+                    string line = rd.ReadLine();
+                    string[] seperator = new string[] { "#" };
+                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                    // convert
+                    long idFile; long.TryParse(arr[0], out idFile);
+                    long idTfFile; long.TryParse(arr[4], out idTfFile);
+                    GiaoDich giaoDich = new GiaoDich(idFile, arr[1], Convert.ToInt32(arr[2]), Convert.ToDateTime(arr[3]), idTfFile);
+                    ListGiaoDich.AddLast(giaoDich);
+                }
+            }
+            return ListGiaoDich;
+        }
     }
 }
