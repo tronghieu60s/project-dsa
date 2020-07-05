@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Threading;
-using System.ComponentModel;
+using project_dsa.helps;
 
 namespace project_dsa.components
 {
@@ -32,7 +31,7 @@ namespace project_dsa.components
 
         public LinkedList<TheTu> Initialization()
         {
-            back:
+        back:
             try
             {
                 string path = "D:/TheTu.txt";
@@ -65,9 +64,9 @@ namespace project_dsa.components
 
         public bool Login(LinkedList<TheTu> ListTheTu)
         {
+            Support _sp = new Support();
             bool status = false;
-            long id;
-            int pin;
+            long id; int pin;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("*********************************");
             Console.Write("*");
@@ -85,8 +84,7 @@ namespace project_dsa.components
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Pin:\t");
             Console.ResetColor();
-            int.TryParse(HidePass(), out pin);
-            Console.WriteLine("\nVui long cho mot chut...");
+            int.TryParse(_sp.HidePass(), out pin);
             // checkpass
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
@@ -95,111 +93,113 @@ namespace project_dsa.components
                     status = true; break;
                 }
             }
-            Thread.Sleep(1000);
-            if (status) Console.WriteLine("Dang Nhap Thanh Cong!");
-            else Console.WriteLine("Dang Nhap That Bai!");
-            Thread.Sleep(1000);
+            _sp.Await(status, "Dang Nhap Thanh Cong!", "Dang Nhap That Bai!");
             return status;
         }
 
-        public void CreateAccount(LinkedList<TheTu> ListTheTu)
+        public void SaveFile(LinkedList<TheTu> ListTheTu)
         {
-            bool status, locked = false;
-            int pin = 123456;
-            long id;
-            do
-            {
-                status = true;
-                id = randomNumber(14);
-                for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-                {
-                    if (p.Value.Id == id)
-                    {
-                        status = false; break;
-                    }
-                }
-            } while (!status);
-
-            // create user
-            Console.Write("Nhap ten khach hang: ");
-            string name = Console.ReadLine();
-            Console.Write("Nhap so du: ");
-            int balance; int.TryParse(Console.ReadLine(), out balance);
-            Console.Write("Nhap loai tien te: ");
-            string currency = Console.ReadLine();
-            string userPath = $"D:/{id}.txt";
-            string historyUserPath = $"D:/LichSu{id}.txt";
-            using (StreamWriter sw = new StreamWriter(historyUserPath)) { }
-            using (StreamWriter sw = new StreamWriter(userPath))
-            {
-                sw.Write(id);
-                sw.Write("#");
-                sw.Write(name);
-                sw.Write("#");
-                sw.Write(balance);
-                sw.Write("#");
-                sw.Write(currency);
-                sw.Write("#");
-            }
-
-            // create card
-            TheTu card = new TheTu(id, pin, locked);
-            ListTheTu.AddLast(card);
             // save file
             string path = "D:/TheTu.txt";
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine(ListTheTu.Count);
                 for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+                    sw.WriteLine($"{p.Value.Id}#{p.Value.Pin}#{p.Value.Locked}");
+            }
+        }
+
+        public void CreateAccount(LinkedList<TheTu> ListTheTu)
+        {
+            Support _sp = new Support();
+            User _user = new User();
+
+            bool locked = false;
+            int pin = 123456;
+            long id = _sp.RandomID(ListTheTu, 14);
+            // create user
+            _user.CreateUser(id);
+            // create card
+            TheTu card = new TheTu(id, pin, locked);
+            ListTheTu.AddLast(card);
+            SaveFile(ListTheTu);
+        }
+
+        public void RenderAccount(LinkedList<TheTu> ListTheTu)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"\tID");
+            Console.Write($"\t\t\tName");
+            Console.Write($"\t\tSo Du");
+            Console.Write($"\t\tLoai Tien");
+            Console.WriteLine($"\tTrang Thai");
+            Console.ResetColor();
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+            {
+                string path = $"D:/{p.Value.Id}.txt";
+                string status = p.Value.Locked ? "Bi Khoa" : "Su Dung";
+                using (StreamReader rd = new StreamReader(path))
                 {
-                    sw.Write(p.Value.Id);
-                    sw.Write("#");
-                    sw.Write(p.Value.Pin);
-                    sw.Write("#");
-                    sw.WriteLine(p.Value.Locked);
+                    string line = rd.ReadLine();
+                    string[] seperator = new string[] { "#" };
+                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                    // convert
+                    Console.Write($"\t{arr[0]}");
+                    Console.Write($"\t\t{arr[1]}");
+                    Console.Write($"\t\t{arr[2]}");
+                    Console.Write($"\t\t{arr[3]}");
+                    Console.WriteLine($"\t\t{status}");
                 }
             }
         }
 
-        private string HidePass()
+        public void DeleteAccount(LinkedList<TheTu> ListTheTu)
         {
-            string pass = "";
-            do
+            Support _sp = new Support();
+            RenderAccount(ListTheTu);
+            long id; bool status = false;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Nhap ID can xoa:\t");
+            Console.ResetColor();
+            long.TryParse(Console.ReadLine(), out id);
+            // delete
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                // Backspace Should Not Work
-                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                if (p.Value.Id == id)
                 {
-                    pass += key.KeyChar;
-                    Console.Write("*");
+                    status = true;
+                    ListTheTu.Remove(p);
+                    // delete file
+                    File.Delete($"D:/{p.Value.Id}.txt");
+                    File.Delete($"D:/LichSu{p.Value.Id}.txt");
+                    break;
                 }
-                else
-                {
-                    if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                    {
-                        pass = pass.Substring(0, (pass.Length - 1));
-                        Console.Write("\b \b");
-                    }
-                    else if (key.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-            } while (true);
-            return pass;
+            }
+            _sp.Await(status, "Xoa Thanh Cong!", "Xoa That Bai!");
+            SaveFile(ListTheTu);
         }
 
-        private long randomNumber(int length)
+        public void UnLockAccount(LinkedList<TheTu> ListTheTu)
         {
-            string sNumber = "";
-            long lNumber;
-            Random rd = new Random();
-            for (int i = 0; i < length; i++)
+            Support _sp = new Support();
+            RenderAccount(ListTheTu);
+            long id; bool status = false;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Nhap ID can unlock:\t");
+            Console.ResetColor();
+            long.TryParse(Console.ReadLine(), out id);
+            // delete
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
-                sNumber += rd.Next(1, 9);
+                if (p.Value.Id == id)
+                {
+                    status = true;
+                    p.Value.Locked = false;
+                    break;
+                }
             }
-            long.TryParse(sNumber, out lNumber);
-            return lNumber;
+            _sp.Await(status, "Mo khoa Thanh Cong!", "Mo khoa That Bai!");
+            SaveFile(ListTheTu);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using project_dsa.components;
-using project_dsa.helps;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -13,23 +12,39 @@ namespace project_dsa
             Admin admin = new Admin();
             User user = new User();
 
-            LinkedList<Admin> ListAdmin = admin.Initialization();
+            //LinkedList<Admin> ListAdmin = admin.Initialization();
+            //LinkedList<TheTu> ListTheTu = user.Initialization();
+            //bool adminLogin = admin.Login(ListAdmin);
+            //if (adminLogin)
+            //    switch (admin.Menu())
+            //    {
+            //        case 1:
+            //            user.RenderAccount(ListTheTu);
+            //            break;
+            //        case 2:
+            //            user.CreateAccount(ListTheTu);
+            //            break;
+            //        case 3:
+            //            user.DeleteAccount(ListTheTu);
+            //            break;
+            //        case 4:
+            //            user.UnLockAccount(ListTheTu);
+            //            break;
+            //        default:
+            //            break;
+            //    }
+
             LinkedList<TheTu> ListTheTu = user.Initialization();
-            bool adminLogin = admin.Login(ListAdmin);
-            if (adminLogin)
-                switch (admin.Menu())
+            bool userLogin = user.Login(ListTheTu);
+            if (userLogin)
+                switch (user.Menu())
                 {
-                    case 2:
-                        user.CreateAccount(ListTheTu);
+                    case 1:
+                        user.RenderAccount(ListTheTu);
                         break;
                     default:
                         break;
                 }
-
-            //LinkedList<TheTu> ListTheTu = user.Initialization();
-            //bool userLogin = user.Login(ListTheTu);
-            //if (userLogin)
-            //    user.Menu();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Threading;
+using project_dsa.helps;
 
 namespace project_dsa.components
 {
@@ -47,6 +48,7 @@ namespace project_dsa.components
 
         public bool Login(LinkedList<Admin> ListAdmin)
         {
+            Support sp = new Support();
             bool status = false;
             string user, pass;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -66,8 +68,7 @@ namespace project_dsa.components
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Pass:\t");
             Console.ResetColor();
-            pass = HidePass();
-            Console.WriteLine("\nVui long cho mot chut...");
+            pass = sp.HidePass();
             // checkpass
             for (LinkedListNode<Admin> p = ListAdmin.First; p != null; p = p.Next)
             {
@@ -76,10 +77,7 @@ namespace project_dsa.components
                     status = true; break;
                 }
             }
-            Thread.Sleep(1000);
-            if (status) Console.WriteLine("Dang Nhap Thanh Cong!");
-            else Console.WriteLine("Dang Nhap That Bai!");
-            Thread.Sleep(1000);
+            sp.Await(status, "Dang Nhap Thanh Cong!", "Dang Nhap That Bai!");
             return status;
         }
 
@@ -110,34 +108,6 @@ namespace project_dsa.components
             Console.ResetColor();
             int.TryParse(Console.ReadLine(), out select);
             return select;
-        }
-
-        private string HidePass()
-        {
-            string pass = "";
-            do
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                // Backspace Should Not Work
-                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                {
-                    pass += key.KeyChar;
-                    Console.Write("*");
-                }
-                else
-                {
-                    if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                    {
-                        pass = pass.Substring(0, (pass.Length - 1));
-                        Console.Write("\b \b");
-                    }
-                    else if (key.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                }
-            } while (true);
-            return pass;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace project_dsa.components
 {
@@ -28,7 +29,7 @@ namespace project_dsa.components
             _currency = currency;
         }
 
-        public void Menu()
+        public int Menu()
         {
             int select;
             Console.Clear();
@@ -55,6 +56,22 @@ namespace project_dsa.components
             Console.Write("Ban chon:\t");
             Console.ResetColor();
             int.TryParse(Console.ReadLine(), out select);
+            return select;
+        }
+
+        public void CreateUser(long id)
+        {
+            Console.Write("Nhap ten khach hang: ");
+            string name = Console.ReadLine();
+            Console.Write("Nhap so du: ");
+            int balance; int.TryParse(Console.ReadLine(), out balance);
+            Console.Write("Nhap loai tien te: ");
+            string currency = Console.ReadLine();
+            string userPath = $"D:/{id}.txt";
+            string historyUserPath = $"D:/LichSu{id}.txt";
+            using (StreamWriter sw = new StreamWriter(historyUserPath)) { }
+            using (StreamWriter sw = new StreamWriter(userPath))
+                sw.WriteLine($"{id}#{name}#{balance}#{currency}");
         }
     }
 }
