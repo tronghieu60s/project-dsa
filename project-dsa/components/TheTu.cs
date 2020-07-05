@@ -20,6 +20,14 @@ namespace project_dsa.components
         {
             _id = 0;
             _pin = 0;
+            _locked = false;
+        }
+
+        public TheTu(long id)
+        {
+            _id = id;
+            _pin = 0;
+            _locked = false;
         }
 
         public TheTu(long id, int pin, bool locked)
@@ -97,7 +105,7 @@ namespace project_dsa.components
                         string line = rd.ReadLine();
                         string[] seperator = new string[] { "#" };
                         string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                        logged = new User(p.Value.Id, p.Value.Pin, arr[1], Convert.ToInt32(arr[2]), arr[3], p.Value.Locked);
+                        logged = new User(p.Value.Id, arr[1], Convert.ToInt32(arr[2]), arr[3]);
                     }
                     status = true;
                     break;

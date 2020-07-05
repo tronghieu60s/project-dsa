@@ -5,7 +5,7 @@ using System.IO;
 
 namespace project_dsa.components
 {
-    class GiaoDich: TheTu
+    class GiaoDich : TheTu
     {
         private string _type;
         private int _amount;
@@ -22,7 +22,7 @@ namespace project_dsa.components
             _time = new DateTime();
         }
 
-        public GiaoDich(long id, int pin, string type, int amount, DateTime time, bool locked): base(id, pin, locked)
+        public GiaoDich(long id, string type, int amount, DateTime time) : base(id)
         {
             _type = type;
             _amount = amount;
@@ -31,7 +31,6 @@ namespace project_dsa.components
 
         public void SaveFile(User user, string type, int amount)
         {
-            // save file
             string path = $"D:/LichSu{user.Id}.txt";
             LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();
             using (StreamReader rd = new StreamReader(path))
@@ -43,10 +42,13 @@ namespace project_dsa.components
                     string[] seperator = new string[] { "#" };
                     string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
                     // convert
-                    GiaoDich giaoDich = new GiaoDich(user.Id, user.Pin, type, amount, DateTime.Now, user.Locked);
+                    long id; long.TryParse(arr[0], out id);
+                    GiaoDich giaoDich = new GiaoDich(id, arr[1], Convert.ToInt32(arr[2]), Convert.ToDateTime(arr[3]));
                     ListGiaoDich.AddLast(giaoDich);
                 }
             }
+            GiaoDich newGiaoDich = new GiaoDich(user.Id, type, amount, DateTime.Now);
+            ListGiaoDich.AddLast(newGiaoDich);
             // save file
             using (StreamWriter sw = new StreamWriter(path))
             {

@@ -45,6 +45,9 @@ namespace project_dsa
                     case 2:
                         user.Withdrawal(userLogin);
                         break;
+                    case 3:
+                        user.Transfers(userLogin);
+                        break;
                     default:
                         break;
                 }

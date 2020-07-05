@@ -23,7 +23,7 @@ namespace project_dsa.components
             _currency = "";
         }
 
-        public User(long id, int pin, string name, int balance, string currency, bool locked) : base(id, pin, locked)
+        public User(long id, string name, int balance, string currency) : base(id)
         {
             _name = name;
             _balance = balance;
@@ -93,6 +93,43 @@ namespace project_dsa.components
                     SaveFile(user);
                     _gd.SaveFile(user, "Rut Tien", money);
                     _sp.Await(true, "Rut tien thanh cong!", "Rut tien that bai!");
+                }
+                else Console.WriteLine("So tien nhap phai la boi so cua 50.");
+            }
+            else Console.WriteLine("Ban khong du tien.");
+        }
+
+        public void Transfers(User user)
+        {
+            Support _sp = new Support();
+            GiaoDich _gd = new GiaoDich();
+            User userReceive;
+
+            Console.Write("Nhap id tai khoan muon chuyen: ");
+            string id = Console.ReadLine();
+            Console.Write("Nhap so tien can chuyen: ");
+            int money; int.TryParse(Console.ReadLine(), out money);
+
+            if (money >= 50000 && user.Balance - money >= 50000)
+            {
+                if (money % 50 == 0)
+                {
+                    string userPath = $"D:/{id}.txt";
+                    using (StreamReader rd = new StreamReader(userPath))
+                    {
+                        string line = rd.ReadLine();
+                        string[] seperator = new string[] { "#" };
+                        string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                        long idUser; long.TryParse(arr[0], out idUser);
+                        userReceive = new User(idUser, arr[1], Convert.ToInt32(arr[2]), arr[3]);
+                    }
+                    user.Balance -= money;
+                    userReceive.Balance += money;
+                    SaveFile(userReceive);
+                    SaveFile(user);
+                    _gd.SaveFile(userReceive, "Nhan Tien", money);
+                    _gd.SaveFile(user, "Chuyen Tien", money);
+                    _sp.Await(true, "Chuyen tien thanh cong!", "Chuyen tien that bai!");
                 }
                 else Console.WriteLine("So tien nhap phai la boi so cua 50.");
             }
