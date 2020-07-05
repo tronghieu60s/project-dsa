@@ -91,7 +91,7 @@ namespace project_dsa.components
                 {
                     user.Balance -= money;
                     SaveFile(user);
-                    _gd.SaveFile(user, "Rut Tien", money);
+                    _gd.SaveFile(user, "Rut Tien", money, 0);
                     _sp.Await(true, "Rut tien thanh cong!", "Rut tien that bai!");
                 }
                 else Console.WriteLine("So tien nhap phai la boi so cua 50.");
@@ -127,8 +127,8 @@ namespace project_dsa.components
                     userReceive.Balance += money;
                     SaveFile(userReceive);
                     SaveFile(user);
-                    _gd.SaveFile(userReceive, "Nhan Tien", money);
-                    _gd.SaveFile(user, "Chuyen Tien", money);
+                    _gd.SaveFile(userReceive, "Nhan Tien", money, user.Id);
+                    _gd.SaveFile(user, "Chuyen Tien", money, userReceive.Id);
                     _sp.Await(true, "Chuyen tien thanh cong!", "Chuyen tien that bai!");
                 }
                 else Console.WriteLine("So tien nhap phai la boi so cua 50.");
@@ -146,7 +146,7 @@ namespace project_dsa.components
             string currency = Console.ReadLine();
             string userPath = $"D:/{id}.txt";
             string historyUserPath = $"D:/LichSu{id}.txt";
-            using (StreamWriter sw = new StreamWriter(historyUserPath)) { }
+            using (StreamWriter sw = new StreamWriter(historyUserPath)) sw.WriteLine(0);
             using (StreamWriter sw = new StreamWriter(userPath))
                 sw.WriteLine($"{id}#{name}#{balance}#{currency}");
         }
