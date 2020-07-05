@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using project_dsa.helps;
 
 namespace project_dsa.components
 {
-    class User: TheTu
+    class User : TheTu
     {
         private string _name;
         private int _balance;
@@ -15,14 +16,14 @@ namespace project_dsa.components
         public int Balance { get => _balance; set => _balance = value; }
         public string Currency { get => _currency; set => _currency = value; }
 
-        public User(): base()
+        public User() : base()
         {
             _name = "";
             _balance = 0;
             _currency = "";
         }
 
-        public User(long id, int pin, string name, int balance, string currency, bool locked): base(id, pin, locked)
+        public User(long id, int pin, string name, int balance, string currency, bool locked) : base(id, pin, locked)
         {
             _name = name;
             _balance = balance;
@@ -57,6 +58,45 @@ namespace project_dsa.components
             Console.ResetColor();
             int.TryParse(Console.ReadLine(), out select);
             return select;
+        }
+
+        public void SaveFile(User user)
+        {
+            // save file
+            string path = $"D:/{user.Id}.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
+            }
+        }
+
+        public void ShowInfo(User user)
+        {
+            Console.WriteLine($"ID: {user.Id}");
+            Console.WriteLine($"Chu tai khoan: {user.Name}");
+            Console.WriteLine($"So du: {user.Balance}");
+            Console.WriteLine($"Loai tien te: {user.Currency}");
+        }
+
+        public void Withdrawal(User user)
+        {
+            Support _sp = new Support();
+            GiaoDich _gd = new GiaoDich();
+
+            Console.Write("Nhap so tien can rut: ");
+            int money; int.TryParse(Console.ReadLine(), out money);
+            if (money >= 50000 && user.Balance - money >= 50000)
+            {
+                if(money % 50 == 0)
+                {
+                    user.Balance -= money;
+                    SaveFile(user);
+                    _gd.SaveFile(user, "Rut Tien", money);
+                    _sp.Await(true, "Rut tien thanh cong!", "Rut tien that bai!");
+                }
+                else Console.WriteLine("So tien nhap phai la boi so cua 50.");
+            }
+            else Console.WriteLine("Ban khong du tien.");
         }
 
         public void CreateUser(long id)

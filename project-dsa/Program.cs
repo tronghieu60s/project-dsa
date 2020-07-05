@@ -35,12 +35,15 @@ namespace project_dsa
             //    }
 
             LinkedList<TheTu> ListTheTu = user.Initialization();
-            bool userLogin = user.Login(ListTheTu);
-            if (userLogin)
+            User userLogin = user.Login(ListTheTu);
+            if (userLogin.Id != 0)
                 switch (user.Menu())
                 {
                     case 1:
-                        user.RenderAccount(ListTheTu);
+                        user.ShowInfo(userLogin);
+                        break;
+                    case 2:
+                        user.Withdrawal(userLogin);
                         break;
                     default:
                         break;

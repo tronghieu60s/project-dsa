@@ -62,9 +62,10 @@ namespace project_dsa.components
             }
         }
 
-        public bool Login(LinkedList<TheTu> ListTheTu)
+        public User Login(LinkedList<TheTu> ListTheTu)
         {
             Support _sp = new Support();
+            User logged = new User();
             bool status = false;
             long id; int pin;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -90,11 +91,20 @@ namespace project_dsa.components
             {
                 if (id == p.Value.Id && pin == p.Value.Pin)
                 {
-                    status = true; break;
+                    string path = $"D:/{p.Value.Id}.txt";
+                    using (StreamReader rd = new StreamReader(path))
+                    {
+                        string line = rd.ReadLine();
+                        string[] seperator = new string[] { "#" };
+                        string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                        logged = new User(p.Value.Id, p.Value.Pin, arr[1], Convert.ToInt32(arr[2]), arr[3], p.Value.Locked);
+                    }
+                    status = true;
+                    break;
                 }
             }
             _sp.Await(status, "Dang Nhap Thanh Cong!", "Dang Nhap That Bai!");
-            return status;
+            return logged;
         }
 
         public void SaveFile(LinkedList<TheTu> ListTheTu)
