@@ -13,14 +13,24 @@ namespace project_dsa.helps
             Console.Write("\nVui long cho mot chut");
             for (int i = 0; i < 3; i++)
             {
-                Thread.Sleep(500);
+                Thread.Sleep(300);
                 Console.Write(".");
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine();
-            if (status) Console.WriteLine(alertTrue);
-            else Console.WriteLine(alertFalse);
-            Thread.Sleep(1000);
+            if (status)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(alertTrue);
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(alertFalse);
+                Console.ResetColor();
+            }
+            Thread.Sleep(800);
         }
 
         public string HidePass()
@@ -80,6 +90,14 @@ namespace project_dsa.helps
             }
             long.TryParse(sNumber, out lNumber);
             return lNumber;
+        }
+
+        public void PressKeyToExit()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("\nNhan phim Enter de thoat. ");
+            Console.ResetColor();
+            Console.ReadLine();
         }
     }
 }

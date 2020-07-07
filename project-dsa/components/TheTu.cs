@@ -8,14 +8,17 @@ namespace project_dsa.components
 {
     class TheTu
     {
+        // fields
         private long _id;
         private int _pin;
         private bool _locked;
 
+        // properties
         public long Id { get => _id; set => _id = value; }
         public int Pin { get => _pin; set => _pin = value; }
         public bool Locked { get => _locked; set => _locked = value; }
 
+        // methos
         public TheTu()
         {
             _id = 0;
@@ -125,99 +128,6 @@ namespace project_dsa.components
                 for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
                     sw.WriteLine($"{p.Value.Id}#{p.Value.Pin}#{p.Value.Locked}");
             }
-        }
-
-        public void CreateAccount(LinkedList<TheTu> ListTheTu)
-        {
-            Support _sp = new Support();
-            User _user = new User();
-
-            bool locked = false;
-            int pin = 123456;
-            long id = _sp.RandomID(ListTheTu, 14);
-            // create user
-            _user.CreateUser(id);
-            // create card
-            TheTu card = new TheTu(id, pin, locked);
-            ListTheTu.AddLast(card);
-            SaveFile(ListTheTu);
-        }
-
-        public void RenderAccount(LinkedList<TheTu> ListTheTu)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"\tID");
-            Console.Write($"\t\t\tName");
-            Console.Write($"\t\tSo Du");
-            Console.Write($"\t\tLoai Tien");
-            Console.WriteLine($"\tTrang Thai");
-            Console.ResetColor();
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-            {
-                string path = $"D:/{p.Value.Id}.txt";
-                string status = p.Value.Locked ? "Bi Khoa" : "Su Dung";
-                using (StreamReader rd = new StreamReader(path))
-                {
-                    string line = rd.ReadLine();
-                    string[] seperator = new string[] { "#" };
-                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                    // convert
-                    Console.Write($"\t{arr[0]}");
-                    Console.Write($"\t\t{arr[1]}");
-                    Console.Write($"\t\t{arr[2]}");
-                    Console.Write($"\t\t{arr[3]}");
-                    Console.WriteLine($"\t\t{status}");
-                }
-            }
-        }
-
-        public void DeleteAccount(LinkedList<TheTu> ListTheTu)
-        {
-            Support _sp = new Support();
-            RenderAccount(ListTheTu);
-            long id; bool status = false;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Nhap ID can xoa:\t");
-            Console.ResetColor();
-            long.TryParse(Console.ReadLine(), out id);
-            // delete
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-            {
-                if (p.Value.Id == id)
-                {
-                    status = true;
-                    ListTheTu.Remove(p);
-                    // delete file
-                    File.Delete($"D:/{p.Value.Id}.txt");
-                    File.Delete($"D:/LichSu{p.Value.Id}.txt");
-                    break;
-                }
-            }
-            _sp.Await(status, "Xoa Thanh Cong!", "Xoa That Bai!");
-            SaveFile(ListTheTu);
-        }
-
-        public void UnLockAccount(LinkedList<TheTu> ListTheTu)
-        {
-            Support _sp = new Support();
-            RenderAccount(ListTheTu);
-            long id; bool status = false;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Nhap ID can unlock:\t");
-            Console.ResetColor();
-            long.TryParse(Console.ReadLine(), out id);
-            // delete
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-            {
-                if (p.Value.Id == id)
-                {
-                    status = true;
-                    p.Value.Locked = false;
-                    break;
-                }
-            }
-            _sp.Await(status, "Mo khoa Thanh Cong!", "Mo khoa That Bai!");
-            SaveFile(ListTheTu);
         }
 
         public void ChangePin(LinkedList<TheTu> ListTheTu, User user)

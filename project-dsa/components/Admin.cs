@@ -46,29 +46,10 @@ namespace project_dsa.components
             return ListAdmin;
         }
 
-        public bool Login(LinkedList<Admin> ListAdmin)
+        public bool Login(LinkedList<Admin> ListAdmin, string user, string pass)
         {
-            Support sp = new Support();
+            Support _sp = new Support();
             bool status = false;
-            string user, pass;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDANG NHAP ADMIN\t");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\t*");
-            Console.WriteLine("*********************************");
-            // user
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("User:\t");
-            Console.ResetColor();
-            user = Console.ReadLine();
-            // pass
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Pass:\t");
-            Console.ResetColor();
-            pass = sp.HidePass();
             // checkpass
             for (LinkedListNode<Admin> p = ListAdmin.First; p != null; p = p.Next)
             {
@@ -77,37 +58,8 @@ namespace project_dsa.components
                     status = true; break;
                 }
             }
-            sp.Await(status, "Dang Nhap Thanh Cong!", "Dang Nhap That Bai!");
+            _sp.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
             return status;
-        }
-
-        public int Menu()
-        {
-            int select;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDANG NHAP ADMIN\t");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\t*");
-            Console.WriteLine("*********************************");
-            Console.WriteLine("************* MENU **************");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("1. Xem danh sach tai khoan");
-            Console.WriteLine("2. Them tai khoan");
-            Console.WriteLine("3. Xoa tai khoan");
-            Console.WriteLine("4. Mo khoa tai khoan");
-            Console.WriteLine("5. Thoat");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            // select
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Ban chon:\t");
-            Console.ResetColor();
-            int.TryParse(Console.ReadLine(), out select);
-            return select;
         }
     }
 }

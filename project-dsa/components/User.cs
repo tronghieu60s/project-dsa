@@ -30,36 +30,6 @@ namespace project_dsa.components
             _currency = currency;
         }
 
-        public int Menu()
-        {
-            int select;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDANG NHAP USER\t");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\t*");
-            Console.WriteLine("*********************************");
-            Console.WriteLine("************* MENU **************");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("1. Xem thong tin tai khoan");
-            Console.WriteLine("2. Rut tien");
-            Console.WriteLine("3. Chuyen Tien");
-            Console.WriteLine("4. Xem noi dung giao dich");
-            Console.WriteLine("5. Doi ma pin");
-            Console.WriteLine("5. Thoat");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            // select
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Ban chon:\t");
-            Console.ResetColor();
-            int.TryParse(Console.ReadLine(), out select);
-            return select;
-        }
-
         public void SaveFile(User user)
         {
             // save file
@@ -67,6 +37,30 @@ namespace project_dsa.components
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
+            }
+        }
+
+        public string[] GetFileID(long id)
+        {
+            string path = $"D:/{id}.txt";
+            try
+            {
+                using (StreamReader rd = new StreamReader(path))
+                {
+                    string line = rd.ReadLine();
+                    string[] seperator = new string[] { "#" };
+                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                    return arr;
+                }
+            }
+            catch (Exception)
+            {
+                using (StreamReader rd = new StreamReader($"D:/TheTu.txt"))
+                {
+
+                }
+                File.Delete($"D:/LichSu{id}.txt");
+                throw;
             }
         }
 
@@ -153,19 +147,37 @@ namespace project_dsa.components
             }
         }
 
-        public void CreateUser(long id)
+        public User CreateUser(LinkedList<TheTu> ListTheTu)
         {
-            Console.Write("Nhap ten khach hang: ");
-            string name = Console.ReadLine();
-            Console.Write("Nhap so du: ");
-            int balance; int.TryParse(Console.ReadLine(), out balance);
-            Console.Write("Nhap loai tien te: ");
-            string currency = Console.ReadLine();
+            Support _sp = new Support();
+
+            int balance;
+            string name, currency;
+            long id = _sp.RandomID(ListTheTu, 14);
+            do
+            {
+                Console.Write("\t- Ten khach hang: ");
+                name = Console.ReadLine();
+            } while (name.Length == 0);
+            do
+            {
+                Console.Write("\t- So du: ");
+                int.TryParse(Console.ReadLine(), out balance);
+            } while (balance == 0);
+            do
+            {
+                Console.Write("\t- Loai tien te: ");
+                currency = Console.ReadLine();
+            } while (currency.Length == 0);
+
+            User user = new User(id, name, balance, currency);
+            // create file
             string userPath = $"D:/{id}.txt";
             string historyUserPath = $"D:/LichSu{id}.txt";
             using (StreamWriter sw = new StreamWriter(historyUserPath)) sw.WriteLine(0);
             using (StreamWriter sw = new StreamWriter(userPath))
-                sw.WriteLine($"{id}#{name}#{balance}#{currency}");
+                sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
+            return user;
         }
     }
 }
