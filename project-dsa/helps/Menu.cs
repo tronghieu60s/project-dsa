@@ -8,6 +8,10 @@ namespace project_dsa.helps
 {
     class Menu
     {
+        User _us = new User();
+        Admin _ad = new Admin();
+        Support _sp = new Support();
+
         public int MainMenu()
         {
             int select;
@@ -63,32 +67,34 @@ namespace project_dsa.helps
 
         public int UserMenu()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDA DN - USER\t");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\t*");
-            Console.WriteLine("*********************************");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\t1. Xem thong tin tai khoan");
-            Console.WriteLine("\t2. Rut tien");
-            Console.WriteLine("\t3. Chuyen Tien");
-            Console.WriteLine("\t4. Xem noi dung giao dich");
-            Console.WriteLine("\t5. Doi ma pin");
-            Console.WriteLine("\t5. -> Dang Xuat");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            int select = InputSelect();
+            int select;
+            do
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("*********************************");
+                Console.Write("*");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("\tDA DN - USER\t");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\t*");
+                Console.WriteLine("*********************************");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("\t1. Xem thong tin tai khoan");
+                Console.WriteLine("\t2. Rut tien");
+                Console.WriteLine("\t3. Chuyen Tien");
+                Console.WriteLine("\t4. Xem noi dung giao dich");
+                Console.WriteLine("\t5. Doi ma pin");
+                Console.WriteLine("\t6. -> Dang Xuat");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("*********************************");
+                select = InputSelect();
+            } while (select <= 0 || select > 6);
             return select;
         }
 
         public bool LoginAdminMenu(LinkedList<Admin> ListAdmin)
         {
-            Support _sp = new Support();
-            Admin _ad = new Admin();
             string user, pass;
 
             Console.Clear();
@@ -117,10 +123,7 @@ namespace project_dsa.helps
 
         public User LoginUserMenu(LinkedList<TheTu> ListTheTu)
         {
-            Support _sp = new Support();
-            User _user = new User();
-            User logged = new User();
-
+            back:
             long id; int pin;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -142,10 +145,10 @@ namespace project_dsa.helps
             Console.ResetColor();
             int.TryParse(_sp.HidePass(), out pin);
 
-            bool status = _user.Login(ListTheTu, id, pin);
+            bool status = _us.Login(ListTheTu, id, pin);
             if (status)
-                return _user.GetFile(id);
-            else return new User();
+                return _us.GetFile(id);
+            else goto back;
         }
 
         public int InputSelect()

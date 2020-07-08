@@ -73,38 +73,5 @@ namespace project_dsa.components
                 throw;
             }
         }
-
-        public User CreateUser(LinkedList<TheTu> ListTheTu)
-        {
-            Support _sp = new Support();
-
-            int balance;
-            string name, currency;
-            long id = _sp.RandomID(ListTheTu, 14);
-            do
-            {
-                Console.Write("\t- Ten khach hang: ");
-                name = Console.ReadLine();
-            } while (name.Length == 0);
-            do
-            {
-                Console.Write("\t- So du: ");
-                int.TryParse(Console.ReadLine(), out balance);
-            } while (balance == 0);
-            do
-            {
-                Console.Write("\t- Loai tien te: ");
-                currency = Console.ReadLine();
-            } while (currency.Length == 0);
-
-            User user = new User(id, name, balance, currency);
-            // create file
-            string userPath = $"D:/{id}.txt";
-            string historyUserPath = $"D:/LichSu{id}.txt";
-            using (StreamWriter sw = new StreamWriter(historyUserPath)) sw.WriteLine(0);
-            using (StreamWriter sw = new StreamWriter(userPath))
-                sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
-            return user;
-        }
     }
 }

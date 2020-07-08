@@ -9,10 +9,12 @@ namespace project_dsa.methods
 {
     class AdminMethods
     {
+        private User _us = new User();
+        private TheTu _cd = new TheTu();
+        private Support _sp = new Support();
+
         public void RenderAccount(LinkedList<TheTu> ListTheTu)
         {
-            User _user = new User();
-
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"\tID");
             Console.Write($"\t\t\tName");
@@ -22,7 +24,7 @@ namespace project_dsa.methods
             Console.ResetColor();
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
-                User user = _user.GetFile(p.Value.Id);
+                User user = _us.GetFile(p.Value.Id);
                 if(user.Id != 0)
                 {
                     string status = Convert.ToBoolean(p.Value.Locked) ? "Bi Khoa" : "Su Dung";
@@ -37,12 +39,8 @@ namespace project_dsa.methods
 
         public void CreateAccount(LinkedList<TheTu> ListTheTu)
         {
-            TheTu _cd = new TheTu();
-            Support _sp = new Support();
-            User _user = new User();
-
             int pin = 123456;
-            User user = _user.CreateUser(ListTheTu);
+            User user = CreateUser(ListTheTu);
             TheTu card = new TheTu(user.Id, pin, false);
             ListTheTu.AddLast(card);
 
@@ -54,15 +52,12 @@ namespace project_dsa.methods
 
         public void DeleteAccount(LinkedList<TheTu> ListTheTu)
         {
-            TheTu _cd = new TheTu();
-            Support _sp = new Support();
             RenderAccount(ListTheTu);
-
-            long id; bool status = false;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Nhap ID can xoa:\t");
             Console.ResetColor();
-            long.TryParse(Console.ReadLine(), out id);
+            long id; long.TryParse(Console.ReadLine(), out id);
+            bool status = false;
 
             // delete
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
@@ -78,20 +73,17 @@ namespace project_dsa.methods
                     break;
                 }
             }
-            _sp.Await(status, "Xoa Thanh Cong!", "Xoa That Bai!");
+            _sp.Await(status, "Xoa Thanh Cong!", "Khong tim thay ID nay!");
         }
 
         public void UnLockAccount(LinkedList<TheTu> ListTheTu)
         {
-            TheTu _cd = new TheTu();
-            Support _sp = new Support();
             RenderAccount(ListTheTu);
-
-            long id; bool status = false;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Nhap ID can unlock:\t");
             Console.ResetColor();
-            long.TryParse(Console.ReadLine(), out id);
+            long id; long.TryParse(Console.ReadLine(), out id);
+            bool status = false;
 
             // unlock
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
@@ -104,7 +96,39 @@ namespace project_dsa.methods
                     break;
                 }
             }
-            _sp.Await(status, "Mo khoa Thanh Cong!", "Mo khoa That Bai!");
+            _sp.Await(status, "Mo khoa Thanh Cong!", "Khong tim thay ID nay!");
+        }
+
+        public User CreateUser(LinkedList<TheTu> ListTheTu)
+        {
+            int balance;
+            string name, currency;
+            long id = _sp.RandomID(ListTheTu, 14);
+            do
+            {
+                Console.Write("\t- Ten khach hang: ");
+                name = Console.ReadLine();
+            } while (name.Length == 0);
+            do
+            {
+                Console.Write("\t- So du: ");
+                int.TryParse(Console.ReadLine(), out balance);
+            } while (balance == 0);
+            do
+            {
+                Console.Write("\t- Loai tien te: ");
+                currency = Console.ReadLine();
+            } while (currency.Length == 0);
+
+            User user = new User(id, name, balance, currency);
+
+            // create file
+            string userPath = $"D:/{id}.txt";
+            string historyUserPath = $"D:/LichSu{id}.txt";
+            using (StreamWriter sw = new StreamWriter(historyUserPath)) sw.WriteLine(0);
+            using (StreamWriter sw = new StreamWriter(userPath))
+                sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
+            return user;
         }
     }
 }

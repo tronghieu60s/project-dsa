@@ -12,6 +12,8 @@ namespace project_dsa.components
         private long _id;
         private int _pin;
         private bool _locked;
+        private static Support _sp = new Support();
+        private static User _us = new User();
 
         // properties
         public long Id { get => _id; set => _id = value; }
@@ -41,6 +43,17 @@ namespace project_dsa.components
         }
 
         //methods
+        public void SaveFile(LinkedList<TheTu> ListTheTu)
+        {
+            // save file
+            string path = "D:/TheTu.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine(ListTheTu.Count);
+                for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+                    sw.WriteLine($"{p.Value.Id}#{p.Value.Pin}#{p.Value.Locked}");
+            }
+        }
 
         public LinkedList<TheTu> GetFile()
         {
@@ -77,30 +90,23 @@ namespace project_dsa.components
 
         public bool Login(LinkedList<TheTu> ListTheTu, long id, int pin)
         {
-            Support _sp = new Support();
             bool status = false;
+            User user = _us.GetFile(id);
+            Console.WriteLine(user.Locked);
             // checkpass
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+            if (!user.Locked)
             {
-                if (id == p.Value.Id && pin == p.Value.Pin)
-                {
-                    status = true; break;
-                }
-            }
-            _sp.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
-            return status;
-        }
-
-        public void SaveFile(LinkedList<TheTu> ListTheTu)
-        {
-            // save file
-            string path = "D:/TheTu.txt";
-            using (StreamWriter sw = new StreamWriter(path))
-            {
-                sw.WriteLine(ListTheTu.Count);
                 for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-                    sw.WriteLine($"{p.Value.Id}#{p.Value.Pin}#{p.Value.Locked}");
-            }
+                {
+                    if (id == p.Value.Id && pin == p.Value.Pin)
+                    {
+                        status = true;
+                        break;
+                    }
+                }
+                _sp.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
+            }else _sp.Await(false, "", "Tai khoan nay da bi khoa!");
+            return status;
         }
     }
 }

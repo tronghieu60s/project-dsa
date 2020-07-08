@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.ComponentModel;
 
 namespace project_dsa.components
 {
     class GiaoDich : TheTu
     {
+        // fields
         private string _type;
         private int _amount;
         private DateTime _time;
         private long _idTf;
 
+        // properties
         public string Type { get => _type; set => _type = value; }
         public int Amount { get => _amount; set => _amount = value; }
         public DateTime Time { get => _time; set => _time = value; }
         public long IdTf { get => _idTf; set => _idTf = value; }
 
+        // constructor
         public GiaoDich()
         {
             _type = "";
@@ -41,25 +45,11 @@ namespace project_dsa.components
             _idTf = idTf;
         }
 
+        // methods
         public void SaveFile(User user, string type, int amount, long idTf)
         {
             string path = $"D:/LichSu{user.Id}.txt";
-            LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();
-            using (StreamReader rd = new StreamReader(path))
-            {
-                int spt = Convert.ToInt32(rd.ReadLine());
-                for (int i = 0; i < spt; i++)
-                {
-                    string line = rd.ReadLine();
-                    string[] seperator = new string[] { "#" };
-                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                    // convert
-                    long idFile; long.TryParse(arr[0], out idFile);
-                    long idTfFile; long.TryParse(arr[4], out idTfFile);
-                    GiaoDich giaoDich = new GiaoDich(idFile, arr[1], Convert.ToInt32(arr[2]), Convert.ToDateTime(arr[3]), idTfFile);
-                    ListGiaoDich.AddLast(giaoDich);
-                }
-            }
+            LinkedList<GiaoDich> ListGiaoDich = GetFile(user.Id);
             GiaoDich newGiaoDich = new GiaoDich(user.Id, type, amount, DateTime.Now, idTf);
             ListGiaoDich.AddLast(newGiaoDich);
             // save file
@@ -71,26 +61,36 @@ namespace project_dsa.components
             }
         }
 
-        public LinkedList<GiaoDich> GetTransaction(string id)
+        public LinkedList<GiaoDich> GetFile(long id)
         {
+            back:
             string path = $"D:/LichSu{id}.txt";
-            LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();
-            using (StreamReader rd = new StreamReader(path))
+            try
             {
-                int spt = Convert.ToInt32(rd.ReadLine());
-                for (int i = 0; i < spt; i++)
+                LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();
+                using (StreamReader rd = new StreamReader(path))
                 {
-                    string line = rd.ReadLine();
-                    string[] seperator = new string[] { "#" };
-                    string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                    // convert
-                    long idFile; long.TryParse(arr[0], out idFile);
-                    long idTfFile; long.TryParse(arr[4], out idTfFile);
-                    GiaoDich giaoDich = new GiaoDich(idFile, arr[1], Convert.ToInt32(arr[2]), Convert.ToDateTime(arr[3]), idTfFile);
-                    ListGiaoDich.AddLast(giaoDich);
+                    int spt = Convert.ToInt32(rd.ReadLine());
+                    for (int i = 0; i < spt; i++)
+                    {
+                        string line = rd.ReadLine();
+                        string[] seperator = new string[] { "#" };
+                        string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                        // convert
+                        long idFile; long.TryParse(arr[0], out idFile);
+                        long idTfFile; long.TryParse(arr[4], out idTfFile);
+                        GiaoDich giaoDich = new GiaoDich(idFile, arr[1], Convert.ToInt32(arr[2]), Convert.ToDateTime(arr[3]), idTfFile);
+                        ListGiaoDich.AddLast(giaoDich);
+                    }
                 }
+                return ListGiaoDich;
             }
-            return ListGiaoDich;
+            catch (Exception)
+            {
+                using (StreamWriter sw = new StreamWriter(path)) {sw.WriteLine(0);}
+                goto back;
+                throw;
+            }
         }
     }
 }

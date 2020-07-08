@@ -54,38 +54,34 @@ namespace project_dsa
                     else
                         goto loginAdminMenu;
                 case 2:
-                loginUserMenu:
                     User userLogin = _mn.LoginUserMenu(ListTheTu);
-                userMenu:
-                    if (userLogin.Id != 0)
-                        switch (_mn.UserMenu())
-                        {
-                            case 1:
-                                _usM.ShowInfo(userLogin);
-                                _sp.PressKeyToExit();
-                                goto userMenu;
-                            case 2:
-                                _usM.Withdrawal(userLogin);
-                                _sp.PressKeyToExit();
-                                goto userMenu;
-                            case 3:
-                                _usM.Transfers(userLogin);
-                                _sp.PressKeyToExit();
-                                goto userMenu;
-                            case 4:
-                                _usM.RenderTransaction(userLogin);
-                                _sp.PressKeyToExit();
-                                goto userMenu;
-                            case 5:
-                                _usM.ChangePin(ListTheTu, userLogin);
-                                _sp.PressKeyToExit();
-                                goto userMenu;
-                            default:
-                                _sp.Await(true, "Dang Xuat Thanh Cong!", "");
-                                goto mainMenu;
-                        }
-                    else
-                        goto loginUserMenu;
+                    userMenu:
+                    switch (_mn.UserMenu())
+                    {
+                        case 1:
+                            _usM.ShowInfo(userLogin);
+                            _sp.PressKeyToExit();
+                            goto userMenu;
+                        case 2:
+                            _usM.Withdrawal(userLogin);
+                            _sp.PressKeyToExit();
+                            goto userMenu;
+                        case 3:
+                            _usM.Transfers(userLogin);
+                            _sp.PressKeyToExit();
+                            goto userMenu;
+                        case 4:
+                            _usM.RenderTransaction(userLogin);
+                            _sp.PressKeyToExit();
+                            goto userMenu;
+                        case 5:
+                            _usM.ChangePin(ListTheTu, userLogin);
+                            _sp.PressKeyToExit();
+                            goto userMenu;
+                        default:
+                            _sp.Await(true, "Dang Xuat Thanh Cong!", "");
+                            goto mainMenu;
+                    }
                 case 3:
                     break;
                 default:
