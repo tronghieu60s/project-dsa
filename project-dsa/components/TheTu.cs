@@ -12,13 +12,14 @@ namespace project_dsa.components
         private long _id;
         private int _pin;
         private bool _locked;
+        private int _wrong;
         private static Support _sp = new Support();
-        private static User _us = new User();
 
         // properties
         public long Id { get => _id; set => _id = value; }
         public int Pin { get => _pin; set => _pin = value; }
         public bool Locked { get => _locked; set => _locked = value; }
+        public int Wrong { get => _wrong; set => _wrong = value; }
 
         // constructor
         public TheTu()
@@ -26,6 +27,7 @@ namespace project_dsa.components
             _id = 0;
             _pin = 0;
             _locked = false;
+            _wrong = 0;
         }
 
         public TheTu(long id)
@@ -33,6 +35,7 @@ namespace project_dsa.components
             _id = id;
             _pin = 0;
             _locked = false;
+            _wrong = 0;
         }
 
         public TheTu(long id, int pin, bool locked)
@@ -40,6 +43,7 @@ namespace project_dsa.components
             _id = id;
             _pin = pin;
             _locked = locked;
+            _wrong = 0;
         }
 
         //methods
@@ -91,21 +95,38 @@ namespace project_dsa.components
         public bool Login(LinkedList<TheTu> ListTheTu, long id, int pin)
         {
             bool status = false;
-            User user = _us.GetFile(id);
-            Console.WriteLine(user.Locked);
             // checkpass
-            if (!user.Locked)
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
-                for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+                if (id == p.Value.Id)
                 {
-                    if (id == p.Value.Id && pin == p.Value.Pin)
+                    if(p.Value.Wrong < 3)
                     {
-                        status = true;
-                        break;
+                        if (p.Value.Locked)
+                        {
+                            _sp.Await(false, "", "Tai khoan nay da bi khoa!");
+                            break;
+                        }
+                        else if (pin == p.Value.Pin)
+                        {
+                            status = true;
+                            _sp.Await(true, "Dang nhap thanh cong!", "");
+                        }
+                        else
+                        {
+                            p.Value.Wrong++;
+                            _sp.Await(false, "", "Tai khoan hoac mat khau khong chinh xac!");
+                        }
                     }
+                    else
+                    {
+                        p.Value.Locked = true;
+                        SaveFile(ListTheTu);
+                        _sp.Await(false, "", "Tai khoan bi khoa do nhap sai qua 3 lan!");
+                    }
+                    break;
                 }
-                _sp.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
-            }else _sp.Await(false, "", "Tai khoan nay da bi khoa!");
+            }
             return status;
         }
     }
