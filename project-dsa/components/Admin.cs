@@ -27,7 +27,7 @@ namespace project_dsa.components
             _pass = pass;
         }
 
-        public LinkedList<Admin> Initialization()
+        public LinkedList<Admin> GetFile()
         {
             string path = "D:/Admin.txt";
             LinkedList<Admin> ListAdmin = new LinkedList<Admin>();

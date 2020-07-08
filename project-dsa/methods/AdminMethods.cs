@@ -22,13 +22,16 @@ namespace project_dsa.methods
             Console.ResetColor();
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
-                string[] arr = _user.GetFileID(p.Value.Id);
-                string status = Convert.ToBoolean(p.Value.Locked) ? "Bi Khoa" : "Su Dung";
-                Console.Write($"\t{arr[0]}");
-                Console.Write($"\t\t{arr[1]}");
-                Console.Write($"\t\t{arr[2]}");
-                Console.Write($"\t\t\t{arr[3]}");
-                Console.WriteLine($"\t\t{status}");
+                User user = _user.GetFile(p.Value.Id);
+                if(user.Id != 0)
+                {
+                    string status = Convert.ToBoolean(p.Value.Locked) ? "Bi Khoa" : "Su Dung";
+                    Console.Write($"\t{user.Id}");
+                    Console.Write($"\t\t{user.Name}");
+                    Console.Write($"\t\t{user.Balance}");
+                    Console.Write($"\t\t\t{user.Currency}");
+                    Console.WriteLine($"\t\t{status}");
+                }
             }
         }
 

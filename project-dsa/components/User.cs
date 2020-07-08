@@ -8,14 +8,17 @@ namespace project_dsa.components
 {
     class User : TheTu
     {
+        // fields
         private string _name;
         private int _balance;
         private string _currency;
 
+        // properties
         public string Name { get => _name; set => _name = value; }
         public int Balance { get => _balance; set => _balance = value; }
         public string Currency { get => _currency; set => _currency = value; }
 
+        // constructor
         public User() : base()
         {
             _name = "";
@@ -30,6 +33,7 @@ namespace project_dsa.components
             _currency = currency;
         }
 
+        // methods
         public void SaveFile(User user)
         {
             // save file
@@ -40,7 +44,7 @@ namespace project_dsa.components
             }
         }
 
-        public string[] GetFileID(long id)
+        public User GetFile(long id)
         {
             string path = $"D:/{id}.txt";
             try
@@ -50,100 +54,23 @@ namespace project_dsa.components
                     string line = rd.ReadLine();
                     string[] seperator = new string[] { "#" };
                     string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                    return arr;
+                    User user = new User(id, arr[1], Convert.ToInt32(arr[2]), arr[3]);
+                    return user;
                 }
             }
             catch (Exception)
             {
-                using (StreamReader rd = new StreamReader($"D:/TheTu.txt"))
-                {
-
-                }
-                File.Delete($"D:/LichSu{id}.txt");
-                throw;
-            }
-        }
-
-        public void ShowInfo(User user)
-        {
-            Console.WriteLine($"ID: {user.Id}");
-            Console.WriteLine($"Chu tai khoan: {user.Name}");
-            Console.WriteLine($"So du: {user.Balance}");
-            Console.WriteLine($"Loai tien te: {user.Currency}");
-        }
-
-        public void Withdrawal(User user)
-        {
-            Support _sp = new Support();
-            GiaoDich _gd = new GiaoDich();
-
-            Console.Write("Nhap so tien can rut: ");
-            int money; int.TryParse(Console.ReadLine(), out money);
-            if (money >= 50000 && user.Balance - money >= 50000)
-            {
-                if(money % 50 == 0)
-                {
-                    user.Balance -= money;
-                    SaveFile(user);
-                    _gd.SaveFile(user, "Rut Tien", money, 0);
-                    _sp.Await(true, "Rut tien thanh cong!", "Rut tien that bai!");
-                }
-                else Console.WriteLine("So tien nhap phai la boi so cua 50.");
-            }
-            else Console.WriteLine("Ban khong du tien.");
-        }
-
-        public void Transfers(User user)
-        {
-            Support _sp = new Support();
-            GiaoDich _gd = new GiaoDich();
-            User userReceive;
-
-            Console.Write("Nhap id tai khoan muon chuyen: ");
-            string id = Console.ReadLine();
-            Console.Write("Nhap so tien can chuyen: ");
-            int money; int.TryParse(Console.ReadLine(), out money);
-
-            if (money >= 50000 && user.Balance - money >= 50000)
-            {
-                if (money % 50 == 0)
-                {
-                    string userPath = $"D:/{id}.txt";
-                    using (StreamReader rd = new StreamReader(userPath))
+                TheTu theTu = new TheTu();
+                LinkedList<TheTu> ListTheTu = theTu.GetFile();
+                for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+                    if(p.Value.Id == id)
                     {
-                        string line = rd.ReadLine();
-                        string[] seperator = new string[] { "#" };
-                        string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                        long idUser; long.TryParse(arr[0], out idUser);
-                        userReceive = new User(idUser, arr[1], Convert.ToInt32(arr[2]), arr[3]);
+                        ListTheTu.Remove(p.Value);
+                        SaveFile(ListTheTu);
                     }
-                    user.Balance -= money;
-                    userReceive.Balance += money;
-                    SaveFile(userReceive);
-                    SaveFile(user);
-                    _gd.SaveFile(userReceive, "Nhan Tien", money, user.Id);
-                    _gd.SaveFile(user, "Chuyen Tien", money, userReceive.Id);
-                    _sp.Await(true, "Chuyen tien thanh cong!", "Chuyen tien that bai!");
-                }
-                else Console.WriteLine("So tien nhap phai la boi so cua 50.");
-            }
-            else Console.WriteLine("Ban khong du tien.");
-        }
-
-        public void RenderTransaction(User user)
-        {
-            Console.Write($"\tGiao Dich");
-            Console.Write($"\tSo Tien");
-            Console.Write($"\t\tThoi Gian");
-            Console.WriteLine($"\t\t\tTu");
-            GiaoDich _gd = new GiaoDich();
-            LinkedList<GiaoDich> ListGiaoDich = _gd.GetTransaction($"{user.Id}");
-            for (LinkedListNode<GiaoDich> p = ListGiaoDich.First; p != null; p = p.Next)
-            {
-                Console.Write($"\t{p.Value.Type}");
-                Console.Write($"\t{p.Value.Amount}");
-                Console.Write($"\t\t{p.Value.Time}");
-                Console.WriteLine($"\t\t{p.Value.IdTf}");
+                File.Delete($"D:/LichSu{id}.txt");
+                return new User();
+                throw;
             }
         }
 

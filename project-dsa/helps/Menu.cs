@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace project_dsa.helps
 {
@@ -112,6 +113,39 @@ namespace project_dsa.helps
             Console.WriteLine();
 
             return _ad.Login(ListAdmin, user, pass);
+        }
+
+        public User LoginUserMenu(LinkedList<TheTu> ListTheTu)
+        {
+            Support _sp = new Support();
+            User _user = new User();
+            User logged = new User();
+
+            long id; int pin;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("*********************************");
+            Console.Write("*");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("\tDANG NHAP USER\t");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\t*");
+            Console.WriteLine("*********************************");
+            // user
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("ID:\t");
+            Console.ResetColor();
+            long.TryParse(Console.ReadLine(), out id);
+            // pass
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Pin:\t");
+            Console.ResetColor();
+            int.TryParse(_sp.HidePass(), out pin);
+
+            bool status = _user.Login(ListTheTu, id, pin);
+            if (status)
+                return _user.GetFile(id);
+            else return new User();
         }
 
         public int InputSelect()

@@ -18,7 +18,7 @@ namespace project_dsa.components
         public int Pin { get => _pin; set => _pin = value; }
         public bool Locked { get => _locked; set => _locked = value; }
 
-        // methos
+        // constructor
         public TheTu()
         {
             _id = 0;
@@ -40,7 +40,9 @@ namespace project_dsa.components
             _locked = locked;
         }
 
-        public LinkedList<TheTu> Initialization()
+        //methods
+
+        public LinkedList<TheTu> GetFile()
         {
         back:
             try
@@ -73,49 +75,20 @@ namespace project_dsa.components
             }
         }
 
-        public User Login(LinkedList<TheTu> ListTheTu)
+        public bool Login(LinkedList<TheTu> ListTheTu, long id, int pin)
         {
             Support _sp = new Support();
-            User logged = new User();
             bool status = false;
-            long id; int pin;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("*********************************");
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\tDANG NHAP USER\t");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\t*");
-            Console.WriteLine("*********************************");
-            // user
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("ID:\t");
-            Console.ResetColor();
-            long.TryParse(Console.ReadLine(), out id);
-            // pass
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Pin:\t");
-            Console.ResetColor();
-            int.TryParse(_sp.HidePass(), out pin);
             // checkpass
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
                 if (id == p.Value.Id && pin == p.Value.Pin)
                 {
-                    string path = $"D:/{p.Value.Id}.txt";
-                    using (StreamReader rd = new StreamReader(path))
-                    {
-                        string line = rd.ReadLine();
-                        string[] seperator = new string[] { "#" };
-                        string[] arr = line.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                        logged = new User(p.Value.Id, arr[1], Convert.ToInt32(arr[2]), arr[3]);
-                    }
-                    status = true;
-                    break;
+                    status = true; break;
                 }
             }
-            _sp.Await(status, "Dang Nhap Thanh Cong!", "Dang Nhap That Bai!");
-            return logged;
+            _sp.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
+            return status;
         }
 
         public void SaveFile(LinkedList<TheTu> ListTheTu)
@@ -127,36 +100,6 @@ namespace project_dsa.components
                 sw.WriteLine(ListTheTu.Count);
                 for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
                     sw.WriteLine($"{p.Value.Id}#{p.Value.Pin}#{p.Value.Locked}");
-            }
-        }
-
-        public void ChangePin(LinkedList<TheTu> ListTheTu, User user)
-        {
-            Support _sp = new Support();
-
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-            {
-                if (p.Value.Id == user.Id)
-                {
-                    Console.Write("Nhap ma pin cu: ");
-                    int oldPin; int.TryParse(_sp.HidePass(), out oldPin);
-                    Console.Write("Nhap ma pin moi: ");
-                    int newPin; int.TryParse(_sp.HidePass(), out newPin);
-                    Console.Write("Nhap lai ma pin moi: ");
-                    int reNewPin; int.TryParse(_sp.HidePass(), out reNewPin);
-                    if (oldPin == p.Value.Pin)
-                    {
-                        if (newPin == reNewPin)
-                        {
-                            p.Value.Pin = newPin;
-                            SaveFile(ListTheTu);
-                            Console.WriteLine("Doi ma pin thanh cong.");
-                        }
-                        else Console.WriteLine("Nhap ma pin khong khop.");
-                    }
-                    else Console.WriteLine("Nhap sai ma pin.");
-                    break;
-                }
             }
         }
     }
