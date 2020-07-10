@@ -8,7 +8,7 @@ namespace project_dsa.helps
 {
     class Support
     {
-        public void Await(bool status, string alertTrue, string alertFalse)
+        public static void Await(bool status, string alertTrue, string alertFalse)
         {
             Console.Write("\nVui long cho mot chut");
             for (int i = 0; i < 3; i++)
@@ -33,7 +33,7 @@ namespace project_dsa.helps
             Thread.Sleep(800);
         }
 
-        public string HidePass()
+        public static string HidePass()
         {
             string pass = "";
             do
@@ -61,7 +61,7 @@ namespace project_dsa.helps
             return pass;
         }
 
-        public long RandomID(LinkedList<TheTu> ListTheTu, int length)
+        public static long RandomID(LinkedList<TheTu> ListTheTu, int length)
         {
             long id; bool status;
             do
@@ -79,7 +79,7 @@ namespace project_dsa.helps
             return id;
         }
 
-        public long RandomNumber(int length)
+        public static long RandomNumber(int length)
         {
             string sNumber = "";
             long lNumber;
@@ -92,7 +92,7 @@ namespace project_dsa.helps
             return lNumber;
         }
 
-        public void PressKeyToExit()
+        public static void PressKeyToExit()
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("\nNhan phim Enter de thoat. ");

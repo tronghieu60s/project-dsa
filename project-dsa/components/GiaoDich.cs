@@ -46,7 +46,7 @@ namespace project_dsa.components
         }
 
         // methods
-        public void SaveFile(User user, string type, int amount, long idTf)
+        public static void SaveFile(User user, string type, int amount, long idTf)
         {
             string path = $"D:/LichSu{user.Id}.txt";
             LinkedList<GiaoDich> ListGiaoDich = GetFile(user.Id);
@@ -61,7 +61,7 @@ namespace project_dsa.components
             }
         }
 
-        public LinkedList<GiaoDich> GetFile(long id)
+        public static LinkedList<GiaoDich> GetFile(long id)
         {
             back:
             string path = $"D:/LichSu{id}.txt";

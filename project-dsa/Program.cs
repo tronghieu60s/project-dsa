@@ -1,6 +1,5 @@
 ﻿using project_dsa.components;
 using project_dsa.helps;
-using project_dsa.methods;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,75 +10,68 @@ namespace project_dsa
     {
         static void Main(string[] args)
         {
-            Menu _mn = new Menu();
-            AdminMethods _adM = new AdminMethods();
-            UserMethods _usM = new UserMethods();
-            Admin _ad = new Admin();
-            User _user = new User();
-            Support _sp = new Support();
-
-            LinkedList<Admin> ListAdmin = _ad.GetFile();
-            LinkedList<TheTu> ListTheTu = _user.GetFile();
+            LinkedList<Admin> ListAdmin = Admin.GetFile();
+            LinkedList<TheTu> ListTheTu = TheTu.GetFile();
 
         mainMenu:
-            switch (_mn.MainMenu())
+            switch (Menu.MainMenu())
             {
                 case 1:
                 loginAdminMenu:
-                    bool adminLogin = _mn.LoginAdminMenu(ListAdmin);
+                    bool adminLogin = Menu.LoginAdminMenu(ListAdmin);
                 adminMenu:
                     if (adminLogin)
-                        switch (_mn.AdminMenu())
+                        switch (Menu.AdminMenu())
                         {
                             case 1:
-                                _adM.RenderAccount(ListTheTu);
-                                _sp.PressKeyToExit();
+                                Admin.RenderAccount(ListTheTu);
+                                Support.PressKeyToExit();
                                 goto adminMenu;
                             case 2:
-                                _adM.CreateAccount(ListTheTu);
-                                _sp.PressKeyToExit();
+                                Admin.CreateAccount(ListTheTu);
+                                Support.PressKeyToExit();
                                 goto adminMenu;
                             case 3:
-                                _adM.DeleteAccount(ListTheTu);
-                                _sp.PressKeyToExit();
+                                Admin.DeleteAccount(ListTheTu);
+                                Support.PressKeyToExit();
                                 goto adminMenu;
                             case 4:
-                                _adM.UnLockAccount(ListTheTu);
-                                _sp.PressKeyToExit();
+                                Admin.UnLockAccount(ListTheTu);
+                                Support.PressKeyToExit();
                                 goto adminMenu;
                             default:
-                                _sp.Await(true, "Dang Xuat Thanh Cong!", "");
+                                Support.Await(true, "Dang Xuat Thanh Cong!", "");
                                 goto mainMenu;
                         }
                     else
                         goto loginAdminMenu;
                 case 2:
-                    User userLogin = _mn.LoginUserMenu(ListTheTu);
+                    User userLogin = Menu.LoginUserMenu(ListTheTu);
                     userMenu:
-                    switch (_mn.UserMenu())
+                    switch (Menu.UserMenu())
                     {
                         case 1:
-                            _usM.ShowInfo(userLogin);
-                            _sp.PressKeyToExit();
+                            User.ShowInfo(userLogin);
+                            Support.PressKeyToExit();
                             goto userMenu;
                         case 2:
-                            _usM.Withdrawal(userLogin);
-                            _sp.PressKeyToExit();
+                            User.Withdrawal(userLogin);
+                            Support.PressKeyToExit();
                             goto userMenu;
                         case 3:
-                            _usM.Transfers(userLogin);
-                            _sp.PressKeyToExit();
+                            User.Transfers(userLogin);
+                            Support.PressKeyToExit();
                             goto userMenu;
                         case 4:
-                            _usM.RenderTransaction(userLogin);
-                            _sp.PressKeyToExit();
+                            User.RenderTransaction(userLogin);
+                            Support.PressKeyToExit();
                             goto userMenu;
                         case 5:
-                            _usM.ChangePin(ListTheTu, userLogin);
-                            _sp.PressKeyToExit();
+                            User.ChangePin(ListTheTu, userLogin);
+                            Support.PressKeyToExit();
                             goto userMenu;
                         default:
-                            _sp.Await(true, "Dang Xuat Thanh Cong!", "");
+                            Support.Await(true, "Dang Xuat Thanh Cong!", "");
                             goto mainMenu;
                     }
                 case 3:

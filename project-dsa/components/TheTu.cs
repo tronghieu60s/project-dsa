@@ -13,7 +13,6 @@ namespace project_dsa.components
         private int _pin;
         private bool _locked;
         private int _wrong;
-        private static Support _sp = new Support();
 
         // properties
         public long Id { get => _id; set => _id = value; }
@@ -46,8 +45,8 @@ namespace project_dsa.components
             _wrong = 0;
         }
 
-        //methods
-        public void SaveFile(LinkedList<TheTu> ListTheTu)
+        // methods
+        public static void SaveFile(LinkedList<TheTu> ListTheTu)
         {
             // save file
             string path = "D:/TheTu.txt";
@@ -59,7 +58,7 @@ namespace project_dsa.components
             }
         }
 
-        public LinkedList<TheTu> GetFile()
+        public static LinkedList<TheTu> GetFile()
         {
         back:
             try
@@ -90,44 +89,6 @@ namespace project_dsa.components
                 goto back;
                 throw;
             }
-        }
-
-        public bool Login(LinkedList<TheTu> ListTheTu, long id, int pin)
-        {
-            bool status = false;
-            // checkpass
-            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-            {
-                if (id == p.Value.Id)
-                {
-                    if(p.Value.Wrong < 3)
-                    {
-                        if (p.Value.Locked)
-                        {
-                            _sp.Await(false, "", "Tai khoan nay da bi khoa!");
-                            break;
-                        }
-                        else if (pin == p.Value.Pin)
-                        {
-                            status = true;
-                            _sp.Await(true, "Dang nhap thanh cong!", "");
-                        }
-                        else
-                        {
-                            p.Value.Wrong++;
-                            _sp.Await(false, "", "Tai khoan hoac mat khau khong chinh xac!");
-                        }
-                    }
-                    else
-                    {
-                        p.Value.Locked = true;
-                        SaveFile(ListTheTu);
-                        _sp.Await(false, "", "Tai khoan bi khoa do nhap sai qua 3 lan!");
-                    }
-                    break;
-                }
-            }
-            return status;
         }
     }
 }

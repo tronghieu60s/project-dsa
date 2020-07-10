@@ -8,11 +8,7 @@ namespace project_dsa.helps
 {
     class Menu
     {
-        User _us = new User();
-        Admin _ad = new Admin();
-        Support _sp = new Support();
-
-        public int MainMenu()
+        public static int MainMenu()
         {
             int select;
             do
@@ -38,7 +34,7 @@ namespace project_dsa.helps
             return select;
         }
 
-        public int AdminMenu()
+        public static int AdminMenu()
         {
             int select;
             do
@@ -65,7 +61,7 @@ namespace project_dsa.helps
             return select;
         }
 
-        public int UserMenu()
+        public static int UserMenu()
         {
             int select;
             do
@@ -93,7 +89,7 @@ namespace project_dsa.helps
             return select;
         }
 
-        public bool LoginAdminMenu(LinkedList<Admin> ListAdmin)
+        public static bool LoginAdminMenu(LinkedList<Admin> ListAdmin)
         {
             string user, pass;
 
@@ -115,13 +111,23 @@ namespace project_dsa.helps
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Pass:\t");
             Console.ResetColor();
-            pass = _sp.HidePass();
+            pass = Support.HidePass();
             Console.WriteLine();
 
-            return _ad.Login(ListAdmin, user, pass);
+            bool status = false;
+            // checkpass
+            for (LinkedListNode<Admin> p = ListAdmin.First; p != null; p = p.Next)
+            {
+                if (user == p.Value.Username && pass == p.Value.Pass)
+                {
+                    status = true; break;
+                }
+            }
+            Support.Await(status, "Dang nhap thanh cong!", "Tai khoan hoac mat khau khong chinh xac!");
+            return status;
         }
 
-        public User LoginUserMenu(LinkedList<TheTu> ListTheTu)
+        public static User LoginUserMenu(LinkedList<TheTu> ListTheTu)
         {
             back:
             long id; int pin;
@@ -143,15 +149,47 @@ namespace project_dsa.helps
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Pin:\t");
             Console.ResetColor();
-            int.TryParse(_sp.HidePass(), out pin);
+            int.TryParse(Support.HidePass(), out pin);
 
-            bool status = _us.Login(ListTheTu, id, pin);
+            bool status = false;
+            // checkpass
+            for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
+            {
+                if (id == p.Value.Id)
+                {
+                    if (p.Value.Wrong < 3)
+                    {
+                        if (p.Value.Locked)
+                        {
+                            Support.Await(false, "", "Tai khoan nay da bi khoa!");
+                            break;
+                        }
+                        else if (pin == p.Value.Pin)
+                        {
+                            status = true;
+                            Support.Await(true, "Dang nhap thanh cong!", "");
+                        }
+                        else
+                        {
+                            p.Value.Wrong++;
+                            Support.Await(false, "", "Tai khoan hoac mat khau khong chinh xac!");
+                        }
+                    }
+                    else
+                    {
+                        p.Value.Locked = true;
+                        TheTu.SaveFile(ListTheTu);
+                        Support.Await(false, "", "Tai khoan bi khoa do nhap sai qua 3 lan!");
+                    }
+                    break;
+                }
+            }
             if (status)
-                return _us.GetFile(id);
+                return User.GetFile(id);
             else goto back;
         }
 
-        public int InputSelect()
+        static int InputSelect()
         {
             int select;
             // select
