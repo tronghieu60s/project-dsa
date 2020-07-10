@@ -48,7 +48,7 @@ namespace project_dsa.components
         // methods
         public static void SaveFile(User user, string type, int amount, long idTf)
         {
-            string path = $"D:/LichSu{user.Id}.txt";
+            string path = $"LichSu{user.Id}.txt";
             LinkedList<GiaoDich> ListGiaoDich = GetFile(user.Id);
             GiaoDich newGiaoDich = new GiaoDich(user.Id, type, amount, DateTime.Now, idTf);
             ListGiaoDich.AddLast(newGiaoDich);
@@ -64,7 +64,7 @@ namespace project_dsa.components
         public static LinkedList<GiaoDich> GetFile(long id)
         {
             back:
-            string path = $"D:/LichSu{id}.txt";
+            string path = $"LichSu{id}.txt";
             try
             {
                 LinkedList<GiaoDich> ListGiaoDich = new LinkedList<GiaoDich>();

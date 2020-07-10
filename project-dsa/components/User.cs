@@ -37,7 +37,7 @@ namespace project_dsa.components
         public static void SaveFile(User user)
         {
             // save file
-            string path = $"D:/{user.Id}.txt";
+            string path = $"{user.Id}.txt";
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
@@ -46,7 +46,7 @@ namespace project_dsa.components
 
         public static User GetFile(long id)
         {
-            string path = $"D:/{id}.txt";
+            string path = $"{id}.txt";
             try
             {
                 using (StreamReader rd = new StreamReader(path))

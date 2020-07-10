@@ -49,7 +49,7 @@ namespace project_dsa.components
         public static void SaveFile(LinkedList<TheTu> ListTheTu)
         {
             // save file
-            string path = "D:/TheTu.txt";
+            string path = "TheTu.txt";
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine(ListTheTu.Count);
@@ -63,7 +63,7 @@ namespace project_dsa.components
         back:
             try
             {
-                string path = "D:/TheTu.txt";
+                string path = "TheTu.txt";
                 LinkedList<TheTu> ListTheTu = new LinkedList<TheTu>();
                 using (StreamReader rd = new StreamReader(path))
                 {
@@ -84,7 +84,7 @@ namespace project_dsa.components
             }
             catch (Exception)
             {
-                string path = "D:/TheTu.txt";
+                string path = "TheTu.txt";
                 using (StreamWriter sw = new StreamWriter(path)) { sw.WriteLine(0); };
                 goto back;
                 throw;

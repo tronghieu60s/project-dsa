@@ -36,7 +36,7 @@ namespace project_dsa.components
         back:
             try
             {
-                string path = "D:/Admin.txt";
+                string path = "Admin.txt";
                 LinkedList<Admin> ListAdmin = new LinkedList<Admin>();
                 using (StreamReader rd = new StreamReader(path))
                 {
@@ -132,8 +132,8 @@ namespace project_dsa.components
                     status = true;
                     ListTheTu.Remove(p);
                     // delete file
-                    File.Delete($"D:/{p.Value.Id}.txt");
-                    File.Delete($"D:/LichSu{p.Value.Id}.txt");
+                    File.Delete($"{p.Value.Id}.txt");
+                    File.Delete($"LichSu{p.Value.Id}.txt");
                     TheTu.SaveFile(ListTheTu);
                     break;
                 }
@@ -188,8 +188,8 @@ namespace project_dsa.components
             User user = new User(id, name, balance, currency);
 
             // create file
-            string userPath = $"D:/{id}.txt";
-            string historyUserPath = $"D:/LichSu{id}.txt";
+            string userPath = $"{id}.txt";
+            string historyUserPath = $"LichSu{id}.txt";
             using (StreamWriter sw = new StreamWriter(historyUserPath)) sw.WriteLine(0);
             using (StreamWriter sw = new StreamWriter(userPath))
                 sw.WriteLine($"{user.Id}#{user.Name}#{user.Balance}#{user.Currency}");
