@@ -62,7 +62,7 @@ namespace project_dsa.components
             {
                 LinkedList<TheTu> ListTheTu = TheTu.GetFile();
                 for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
-                    if(p.Value.Id == id)
+                    if (p.Value.Id == id)
                     {
                         ListTheTu.Remove(p.Value);
                         SaveFile(ListTheTu);
@@ -85,24 +85,29 @@ namespace project_dsa.components
         {
             Console.Write("\t- Nhap so tien can rut: ");
             int money; int.TryParse(Console.ReadLine(), out money);
-            if (money >= 50000 && user.Balance - money >= 50000)
+            if (money >= 50000)
             {
-                if (money % 50 == 0)
+                if (user.Balance - money >= 50000)
                 {
-                    Console.Write($"Ban chac chan muon rut {money}{user.Currency}? (Y/N)");
-                    string check = Console.ReadLine();
-
-                    if(check == "Y" || check == "Yes")
+                    if (money % 50 == 0)
                     {
-                        user.Balance -= money;
-                        User.SaveFile(user);
-                        GiaoDich.SaveFile(user, "Rut Tien", money, 0);
-                        Support.Await(true, "Rut tien thanh cong!", "");
-                    }else Support.Await(false, "", "Rut tien that bai!");
+                        Console.Write($"\nBan chac chan muon rut {money} {user.Currency}? (Y/N)");
+                        string check = Console.ReadLine();
+
+                        if (check == "Y" || check == "y" || check == "Yes")
+                        {
+                            user.Balance -= money;
+                            User.SaveFile(user);
+                            GiaoDich.SaveFile(user, "Rut Tien", money, 0);
+                            Support.Await(true, "Rut tien thanh cong!", "");
+                        }
+                        else Support.Await(false, "", "Rut tien that bai!");
+                    }
+                    else Support.Await(false, "", "So tien nhap phai la boi so cua 50!");
                 }
-                else Support.Await(false, "", "So tien nhap phai la boi so cua 50!");
+                else Support.Await(false, "", "Ban khong du tien!");
             }
-            else Support.Await(false, "", "Ban khong du tien!");
+            else Support.Await(false, "", "Ban khong the rut duoi 50.000!");
         }
 
         public static void Transfers(User user)
@@ -112,33 +117,37 @@ namespace project_dsa.components
             Console.Write("\t- Nhap so tien can chuyen: ");
             int money; int.TryParse(Console.ReadLine(), out money);
 
-            if (money >= 50000 && user.Balance - money >= 50000)
+            if (money >= 50000)
             {
-                if (money % 50 == 0)
+                if (money >= 50000 && user.Balance - money >= 50000)
                 {
-                    User userReceive = User.GetFile(id);
-                    if (userReceive.Id != 0)
+                    if (money % 50 == 0)
                     {
-                        Console.Write($"Ban chac chan muon chuyen {money}{user.Currency} cho so tai khoan " +
-                            $"{userReceive.Id} - {userReceive.Name}? (Y/N)");
-                        string check = Console.ReadLine();
-
-                        if (check == "Y" || check == "Yes")
+                        User userReceive = User.GetFile(id);
+                        if (userReceive.Id != 0)
                         {
-                            user.Balance -= money;
-                            userReceive.Balance += money;
-                            User.SaveFile(userReceive);
-                            User.SaveFile(user);
-                            GiaoDich.SaveFile(userReceive, "Nhan Tien", money, user.Id);
-                            GiaoDich.SaveFile(user, "Chuyen Tien", money, userReceive.Id);
-                            Support.Await(true, "Chuyen tien thanh cong!", "");
-                        }else Support.Await(false, "", "Chuyen tien that bai!");
+                            Console.Write($"\nBan chac chan muon chuyen {money} {user.Currency} cho so tai khoan " +
+                                $"{userReceive.Id} - {userReceive.Name}? (Y/N)");
+                            string check = Console.ReadLine();
+
+                            if (check == "Y" || check == "y" || check == "Yes")
+                            {
+                                user.Balance -= money;
+                                userReceive.Balance += money;
+                                User.SaveFile(userReceive);
+                                User.SaveFile(user);
+                                GiaoDich.SaveFile(userReceive, "Nhan Tien", money, user.Id);
+                                GiaoDich.SaveFile(user, "Chuyen Tien", money, userReceive.Id);
+                                Support.Await(true, "Chuyen tien thanh cong!", "");
+                            }
+                            else Support.Await(false, "", "Chuyen tien that bai!");
+                        }
+                        else Support.Await(false, "", "Khong tim thay nguoi dung nay!");
                     }
-                    else Support.Await(false, "", "Khong tim thay nguoi dung nay!");
+                    else Support.Await(false, "", "So tien nhap phai la boi so cua 50!");
                 }
-                else Support.Await(false, "", "So tien nhap phai la boi so cua 50!");
-            }
-            else Support.Await(false, "", "Ban khong du tien!");
+                else Support.Await(false, "", "Ban khong du tien!");
+            }else Support.Await(false, "", "Ban khong the rut duoi 50.000!");
         }
 
         public static void RenderTransaction(User user)
@@ -146,16 +155,16 @@ namespace project_dsa.components
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"\tGiao Dich");
             Console.Write($"\tSo Tien");
-            Console.Write($"\t\tThoi Gian");
-            Console.WriteLine($"\t\t\tTu");
+            Console.WriteLine($"\t\tThoi Gian");
             Console.ResetColor();
             LinkedList<GiaoDich> ListGiaoDich = GiaoDich.GetFile(user.Id);
             for (LinkedListNode<GiaoDich> p = ListGiaoDich.First; p != null; p = p.Next)
             {
+                string IdTf = p.Value.IdTf != 0 ? $"\t({p.Value.IdTf})\n" : "";
                 Console.Write($"\t{p.Value.Type}");
                 Console.Write($"\t{p.Value.Amount}");
-                Console.Write($"\t\t{p.Value.Time}");
-                Console.WriteLine($"\t\t{p.Value.IdTf}");
+                Console.WriteLine($"\t\t{p.Value.Time}");
+                Console.Write($"{IdTf}");
             }
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.IO;
 
 namespace project_dsa.helps
@@ -129,7 +130,7 @@ namespace project_dsa.helps
 
         public static User LoginUserMenu(LinkedList<TheTu> ListTheTu)
         {
-            back:
+        back:
             long id; int pin;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -150,6 +151,7 @@ namespace project_dsa.helps
             Console.Write("Pin:\t");
             Console.ResetColor();
             int.TryParse(Support.HidePass(), out pin);
+            Console.WriteLine();
 
             bool status = false;
             // checkpass
@@ -157,14 +159,14 @@ namespace project_dsa.helps
             {
                 if (id == p.Value.Id)
                 {
-                    if (p.Value.Wrong < 3)
+                    if (p.Value.Locked)
                     {
-                        if (p.Value.Locked)
-                        {
-                            Support.Await(false, "", "Tai khoan nay da bi khoa!");
-                            break;
-                        }
-                        else if (pin == p.Value.Pin)
+                        Support.Await(false, "", "Tai khoan nay da bi khoa!");
+                        break;
+                    }
+                    else if (p.Value.Wrong < 2)
+                    {
+                        if (pin == p.Value.Pin)
                         {
                             status = true;
                             Support.Await(true, "Dang nhap thanh cong!", "");
@@ -180,6 +182,7 @@ namespace project_dsa.helps
                         p.Value.Locked = true;
                         TheTu.SaveFile(ListTheTu);
                         Support.Await(false, "", "Tai khoan bi khoa do nhap sai qua 3 lan!");
+                        Thread.Sleep(1000);
                     }
                     break;
                 }

@@ -68,7 +68,8 @@ namespace project_dsa.components
                 ListAdmin.AddLast(new Admin(username, password));
                 ListAdmin.AddLast(new Admin($"{username}2", password));
                 ListAdmin.AddLast(new Admin($"{username}3", password));
-                using (StreamWriter sw = new StreamWriter(path)) {
+                using (StreamWriter sw = new StreamWriter(path))
+                {
                     sw.WriteLine(ListAdmin.Count);
                     for (LinkedListNode<Admin> p = ListAdmin.First; p != null; p = p.Next)
                         sw.WriteLine($"{p.Value.Username}#{p.Value.Pass}");
@@ -78,7 +79,7 @@ namespace project_dsa.components
             }
         }
 
-        public static void RenderAccount(LinkedList<TheTu> ListTheTu)
+        public static void RenderAccount(LinkedList<TheTu> ListTheTu, string status)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"\tID");
@@ -90,14 +91,28 @@ namespace project_dsa.components
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
                 User user = User.GetFile(p.Value.Id);
+                string locked = p.Value.Locked ? "Bi Khoa" : "Su Dung";
                 if (user.Id != 0)
                 {
-                    string status = Convert.ToBoolean(p.Value.Locked) ? "Bi Khoa" : "Su Dung";
-                    Console.Write($"\t{user.Id}");
-                    Console.Write($"\t\t{user.Name}");
-                    Console.Write($"\t\t{user.Balance}");
-                    Console.Write($"\t\t\t{user.Currency}");
-                    Console.WriteLine($"\t\t{status}");
+                    if (status == "locked")
+                    {
+                        if(p.Value.Locked == true)
+                        {
+                            Console.Write($"\t{user.Id}");
+                            Console.Write($"\t\t{user.Name}");
+                            Console.Write($"\t\t{user.Balance}");
+                            Console.Write($"\t\t\t{user.Currency}");
+                            Console.WriteLine($"\t\t{locked}");
+                        }
+                    }
+                    else
+                    {
+                        Console.Write($"\t{user.Id}");
+                        Console.Write($"\t\t{user.Name}");
+                        Console.Write($"\t\t{user.Balance}");
+                        Console.Write($"\t\t\t{user.Currency}");
+                        Console.WriteLine($"\t\t{locked}");
+                    }
                 }
             }
         }
@@ -117,9 +132,9 @@ namespace project_dsa.components
 
         public static void DeleteAccount(LinkedList<TheTu> ListTheTu)
         {
-            RenderAccount(ListTheTu);
+            RenderAccount(ListTheTu, "");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Nhap ID can xoa:\t");
+            Console.Write("\nNhap ID can xoa: ");
             Console.ResetColor();
             long id; long.TryParse(Console.ReadLine(), out id);
             bool status = false;
@@ -143,9 +158,9 @@ namespace project_dsa.components
 
         public static void UnLockAccount(LinkedList<TheTu> ListTheTu)
         {
-            RenderAccount(ListTheTu);
+            RenderAccount(ListTheTu, "locked");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Nhap ID can unlock:\t");
+            Console.Write("\nNhap ID can unlock: ");
             Console.ResetColor();
             long id; long.TryParse(Console.ReadLine(), out id);
             bool status = false;

@@ -24,7 +24,7 @@ namespace project_dsa
                         switch (Menu.AdminMenu())
                         {
                             case 1:
-                                Admin.RenderAccount(ListTheTu);
+                                Admin.RenderAccount(ListTheTu, "");
                                 Support.PressKeyToExit();
                                 goto adminMenu;
                             case 2:
