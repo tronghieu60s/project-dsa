@@ -90,6 +90,17 @@ namespace project_dsa.helps
             return select;
         }
 
+        public static void InfoTeam()
+        {
+            Console.Clear();
+            Console.WriteLine("Nhom 1: ");
+            Console.WriteLine("\t- Tran Trong Hieu - 19211TT1201 ");
+            Console.WriteLine("\t- Nguyen Ngoc Truong - 19211TT1221 ");
+            Console.WriteLine("\t- Nguyen Thi Kim Ngan - 19211TT1008 ");
+            Console.WriteLine("\t- Le Thi Huynh Nhu - 19211TT0981 ");
+            Console.WriteLine("\t- Ngo Bay Hen - 19211TT1120 ");
+        }
+
         public static bool LoginAdminMenu(LinkedList<Admin> ListAdmin)
         {
             string user, pass;

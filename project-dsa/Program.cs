@@ -75,7 +75,9 @@ namespace project_dsa
                             goto mainMenu;
                     }
                 case 3:
-                    break;
+                    Menu.InfoTeam();
+                    Support.PressKeyToExit();
+                    goto mainMenu;
                 default:
                     break;
             }
