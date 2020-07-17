@@ -82,11 +82,7 @@ namespace project_dsa.components
         public static void RenderAccount(LinkedList<TheTu> ListTheTu, string status)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"\tID");
-            Console.Write($"\t\t\tName");
-            Console.Write($"\t\t\tSo Du");
-            Console.Write($"\t\t\tLoai Tien");
-            Console.WriteLine($"\tTrang Thai");
+            Console.WriteLine("\t{0,-20}{1,-25}{2,-20}{3,-20}{4,-20}", "ID", "Name", "So Du", "Loai Tien", "Trang Thai");
             Console.ResetColor();
             for (LinkedListNode<TheTu> p = ListTheTu.First; p != null; p = p.Next)
             {
@@ -96,23 +92,10 @@ namespace project_dsa.components
                 {
                     if (status == "locked")
                     {
-                        if(p.Value.Locked == true)
-                        {
-                            Console.Write($"\t{user.Id}");
-                            Console.Write($"\t\t{user.Name}");
-                            Console.Write($"\t\t{user.Balance}");
-                            Console.Write($"\t\t\t{user.Currency}");
-                            Console.WriteLine($"\t\t{locked}");
-                        }
+                        if (p.Value.Locked)
+                            Console.WriteLine("\t{0,-20}{1,-25}{2,-20}{3,-20}{4,-20}", user.Id, user.Name, user.Balance, user.Currency, locked);
                     }
-                    else
-                    {
-                        Console.Write($"\t{user.Id}");
-                        Console.Write($"\t\t{user.Name}");
-                        Console.Write($"\t\t{user.Balance}");
-                        Console.Write($"\t\t\t{user.Currency}");
-                        Console.WriteLine($"\t\t{locked}");
-                    }
+                    else Console.WriteLine("\t{0,-20}{1,-25}{2,-20}{3,-20}{4,-20}", user.Id, user.Name, user.Balance, user.Currency, locked);
                 }
             }
         }
